@@ -29,18 +29,18 @@
     <section class="status-grid" aria-label="Status implementacije">
         <article>
             <span>01</span>
-            <h2>MVC skeleton</h2>
-            <p>Kontroler, Thymeleaf view i statički CSS su povezani.</p>
+            <h2 th:text="${jobCount} + ' poslova'">0 poslova</h2>
+            <p>Seed podaci se cuvaju u application scope memorijskom repozitorijumu.</p>
         </article>
         <article>
             <span>02</span>
-            <h2>Application scope</h2>
-            <p>Memorijsko skladište podataka dolazi u sledećoj fazi.</p>
+            <h2 th:text="${proposalCount} + ' prijava'">0 prijava</h2>
+            <p>Proposal prijave su povezane sa poslom, freelancerom i CV metapodacima.</p>
         </article>
         <article>
             <span>03</span>
-            <h2>CV upload</h2>
-            <p>Rad sa fajlovima biće deo proposal prijave.</p>
+            <h2 th:text="${userCount} + ' korisnika'">0 korisnika</h2>
+            <p>U sistemu postoje pocetni client i freelancer korisnik.</p>
         </article>
     </section>
 </main>
