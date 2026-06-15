@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="sr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle}">Poslovi</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<header class="topbar">
+    <a class="brand" th:href="@{/}">FreelanceHub</a>
+    <nav class="nav">
+        <a th:href="@{/jobs}">Poslovi</a>
+        <a th:href="@{/jobs/new}">Novi posao</a>
+        <a th:href="@{/}">Profil</a>
+    </nav>
+</header>
+
+<main class="page-shell">
+    <div class="page-header">
+        <div>
+            <p class="eyebrow">Pregled poslova</p>
+            <h1>Freelance poslovi</h1>
+        </div>
+        <a class="button primary" th:href="@{/jobs/new}">Objavi posao</a>
+    </div>
+
+    <form class="filter-bar" method="get" th:action="@{/jobs}">
+        <label>
+            Pretraga
+            <input type="search" name="keyword" th:value="${keyword}" placeholder="Naziv ili opis posla">
+        </label>
+        <label>
+            Kategorija
+            <select name="categoryId">
+                <option value="">Sve kategorije</option>
+                <option th:each="category : ${categories}"
+                        th:value="${category.id}"
+                        th:selected="${categoryId != null and category.id == categoryId}"
+                        th:text="${category.name}">Kategorija</option>
+            </select>
+        </label>
+        <label>
+            Budzet od
+            <input type="number" name="minBudget" min="0" step="0.01" th:value="${minBudget}">
+        </label>
+        <label>
+            Budzet do
+            <input type="number" name="maxBudget" min="0" step="0.01" th:value="${maxBudget}">
+        </label>
+        <button class="button secondary" type="submit">Filtriraj</button>
+    </form>
+
+    <section class="table-panel" aria-label="Lista poslova">
+        <table>
+            <thead>
+            <tr>
+                <th>Naziv</th>
+                <th>Kategorija</th>
+                <th>Budzet</th>
+                <th>Client</th>
+                <th>Akcije</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${jobs.isEmpty()}">
+                <td colspan="5">Nema poslova koji odgovaraju filterima.</td>
+            </tr>
+            <tr th:each="job : ${jobs}">
+                <td>
+                    <a class="table-link" th:href="@{/jobs/{id}(id=${job.id})}" th:text="${job.title}">Naziv</a>
+                    <p class="table-subtitle" th:text="${#strings.abbreviate(job.description, 90)}">Opis</p>
+                </td>
+                <td th:text="${job.category.name}">Kategorija</td>
+                <td th:text="${#numbers.formatDecimal(job.budget, 1, 2)} + ' EUR'">0.00 EUR</td>
+                <td th:text="${job.client.fullName}">Client</td>
+                <td class="table-actions">
+                    <a class="button compact secondary" th:href="@{/jobs/{id}(id=${job.id})}">Detalji</a>
+                    <a class="button compact secondary" th:href="@{/jobs/{id}/edit(id=${job.id})}">Izmeni</a>
+                    <form method="post" th:action="@{/jobs/{id}/delete(id=${job.id})}">
+                        <button class="button compact danger" type="submit">Obrisi</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+</body>
+</html>

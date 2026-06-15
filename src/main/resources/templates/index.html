@@ -10,8 +10,8 @@
 <header class="topbar">
     <a class="brand" th:href="@{/}">FreelanceHub</a>
     <nav class="nav">
-        <a th:href="@{/}">Poslovi</a>
-        <a th:href="@{/}">Prijave</a>
+        <a th:href="@{/jobs}">Poslovi</a>
+        <a th:href="@{/jobs/new}">Novi posao</a>
         <a th:href="@{/}">Profil</a>
     </nav>
 </header>
@@ -21,9 +21,13 @@
         <p class="eyebrow">IT355 PZ1</p>
         <h1>Spring MVC aplikacija za freelance poslove i proposal prijave</h1>
         <p>
-            Početna verzija projekta je spremna. U sledećim fazama biće dodati modeli,
-            application scope skladište, CRUD tokovi, prijave i CV attachment.
+            Pocetna verzija projekta ima MVC tok, application scope memoriju,
+            servisni sloj i CRUD ekrane za freelance poslove.
         </p>
+        <div class="actions">
+            <a class="button primary" th:href="@{/jobs}">Pregled poslova</a>
+            <a class="button secondary" th:href="@{/jobs/new}">Objavi posao</a>
+        </div>
     </section>
 
     <section class="status-grid" aria-label="Status implementacije">

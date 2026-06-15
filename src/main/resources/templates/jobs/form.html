@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="sr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle}">Forma posla</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<header class="topbar">
+    <a class="brand" th:href="@{/}">FreelanceHub</a>
+    <nav class="nav">
+        <a th:href="@{/jobs}">Poslovi</a>
+        <a th:href="@{/jobs/new}">Novi posao</a>
+        <a th:href="@{/}">Profil</a>
+    </nav>
+</header>
+
+<main class="page-shell narrow">
+    <div class="page-header">
+        <div>
+            <p class="eyebrow" th:text="${includeClients} ? 'Novi oglas' : 'Izmena oglasa'">Forma</p>
+            <h1 th:text="${pageTitle}">Forma posla</h1>
+        </div>
+        <a class="button secondary" th:href="@{/jobs}">Nazad</a>
+    </div>
+
+    <div th:if="${errorMessage}" class="alert" th:text="${errorMessage}">Greska</div>
+
+    <form class="form-panel"
+          method="post"
+          th:object="${jobForm}"
+          th:action="${includeClients} ? @{/jobs} : @{/jobs/{id}/edit(id=${jobId})}">
+        <label>
+            Naziv posla
+            <input type="text" th:field="*{title}" placeholder="npr. Izrada Spring MVC modula">
+        </label>
+
+        <label>
+            Opis posla
+            <textarea th:field="*{description}" rows="7" placeholder="Opis zahteva, ciljeva i ocekivanog rezultata"></textarea>
+        </label>
+
+        <div class="form-grid">
+            <label>
+                Budzet
+                <input type="number" min="0" step="0.01" th:field="*{budget}">
+            </label>
+
+            <label>
+                Kategorija
+                <select th:field="*{categoryId}">
+                    <option value="">Izaberi kategoriju</option>
+                    <option th:each="category : ${categories}"
+                            th:value="${category.id}"
+                            th:text="${category.name}">Kategorija</option>
+                </select>
+            </label>
+        </div>
+
+        <label th:if="${includeClients}">
+            Client korisnik
+            <select th:field="*{clientId}">
+                <option value="">Izaberi client korisnika</option>
+                <option th:each="client : ${clients}"
+                        th:value="${client.id}"
+                        th:text="${client.fullName}">Client</option>
+            </select>
+        </label>
+
+        <fieldset>
+            <legend>Trazene vestine</legend>
+            <div class="checkbox-grid">
+                <label th:each="skill : ${skills}" class="checkbox-row">
+                    <input type="checkbox" th:field="*{skillIds}" th:value="${skill.id}">
+                    <span th:text="${skill.name}">Vestina</span>
+                </label>
+            </div>
+        </fieldset>
+
+        <div class="form-actions">
+            <button class="button primary" type="submit">Sacuvaj</button>
+            <a class="button secondary" th:href="@{/jobs}">Odustani</a>
+        </div>
+    </form>
+</main>
+</body>
+</html>

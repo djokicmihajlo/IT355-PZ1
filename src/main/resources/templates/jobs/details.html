@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="sr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle}">Detalji posla</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<header class="topbar">
+    <a class="brand" th:href="@{/}">FreelanceHub</a>
+    <nav class="nav">
+        <a th:href="@{/jobs}">Poslovi</a>
+        <a th:href="@{/jobs/new}">Novi posao</a>
+        <a th:href="@{/}">Profil</a>
+    </nav>
+</header>
+
+<main class="page-shell">
+    <div class="page-header">
+        <div>
+            <p class="eyebrow" th:text="${job.category.name}">Kategorija</p>
+            <h1 th:text="${job.title}">Naziv posla</h1>
+        </div>
+        <div class="actions">
+            <a class="button secondary" th:href="@{/jobs}">Nazad</a>
+            <a class="button primary" th:href="@{/jobs/{id}/edit(id=${job.id})}">Izmeni</a>
+        </div>
+    </div>
+
+    <section class="detail-layout">
+        <article class="detail-main">
+            <h2>Opis posla</h2>
+            <p th:text="${job.description}">Opis</p>
+        </article>
+
+        <aside class="detail-side">
+            <dl>
+                <div>
+                    <dt>Budzet</dt>
+                    <dd th:text="${#numbers.formatDecimal(job.budget, 1, 2)} + ' EUR'">0.00 EUR</dd>
+                </div>
+                <div>
+                    <dt>Client</dt>
+                    <dd th:text="${job.client.fullName}">Client</dd>
+                </div>
+                <div>
+                    <dt>Email</dt>
+                    <dd th:text="${job.client.email}">email@example.com</dd>
+                </div>
+            </dl>
+        </aside>
+    </section>
+
+    <section class="skill-row" aria-label="Trazene vestine">
+        <span th:each="skill : ${job.requiredSkills}" th:text="${skill.name}">Vestina</span>
+    </section>
+</main>
+</body>
+</html>
