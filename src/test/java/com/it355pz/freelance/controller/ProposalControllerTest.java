@@ -3,19 +3,24 @@ package com.it355pz.freelance.controller;
 import com.it355pz.freelance.model.Proposal;
 import com.it355pz.freelance.model.User;
 import com.it355pz.freelance.repository.ApplicationData;
+import com.it355pz.freelance.service.ProposalDraftService;
 import com.it355pz.freelance.service.ProposalService;
+import com.it355pz.freelance.service.ValidationException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.math.BigDecimal;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
@@ -33,6 +38,9 @@ class ProposalControllerTest {
 
     @Autowired
     private ProposalService proposalService;
+
+    @MockitoBean
+    private ProposalDraftService proposalDraftService;
 
     @Test
     void proposalFormRendersForJob() throws Exception {
@@ -52,6 +60,30 @@ class ProposalControllerTest {
                         .param("estimatedDays", "4"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/jobs/" + firstJobId() + "/proposals"));
+    }
+
+    @Test
+    void geminiDraftPopulatesProposalText() throws Exception {
+        String draftText = "Postovani, mogu da realizujem trazeni posao kroz Spring MVC i Thymeleaf.";
+        when(proposalDraftService.generateDraft(firstJobId(), firstFreelancerId())).thenReturn(draftText);
+
+        mockMvc.perform(post("/jobs/{jobId}/proposals/draft", firstJobId())
+                        .param("freelancerId", firstFreelancerId().toString())
+                        .param("offeredPrice", "380.00")
+                        .param("estimatedDays", "4"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Gemini draft je generisan.")))
+                .andExpect(content().string(containsString(draftText)));
+    }
+
+    @Test
+    void geminiDraftShowsValidationError() throws Exception {
+        when(proposalDraftService.generateDraft(firstJobId(), null))
+                .thenThrow(new ValidationException("Izaberi freelancera pre generisanja drafta."));
+
+        mockMvc.perform(post("/jobs/{jobId}/proposals/draft", firstJobId()))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Izaberi freelancera pre generisanja drafta.")));
     }
 
     @Test

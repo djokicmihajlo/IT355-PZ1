@@ -368,6 +368,12 @@ dd {
     gap: 16px;
 }
 
+.ai-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: -8px;
+}
+
 fieldset {
     margin: 0;
     padding: 16px;
@@ -408,6 +414,16 @@ legend {
     border: 1px solid #e9bbb7;
     border-radius: 8px;
     color: var(--danger);
+    font-weight: 700;
+}
+
+.notice {
+    margin-bottom: 16px;
+    padding: 12px 14px;
+    background: #edf8f1;
+    border: 1px solid #b8dfc4;
+    border-radius: 8px;
+    color: #23623a;
     font-weight: 700;
 }
 

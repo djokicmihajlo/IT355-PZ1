@@ -26,6 +26,7 @@
     </div>
 
     <div th:if="${errorMessage}" class="alert" th:text="${errorMessage}">Greska</div>
+    <div th:if="${successMessage}" class="notice" th:text="${successMessage}">Poruka</div>
 
     <form class="form-panel"
           method="post"
@@ -46,6 +47,12 @@
             Proposal tekst
             <textarea th:field="*{proposalText}" rows="8" placeholder="Predstavi iskustvo, pristup poslu i razlog zasto si dobar izbor"></textarea>
         </label>
+        <div class="ai-actions">
+            <button class="button secondary"
+                    type="submit"
+                    th:formaction="@{/jobs/{id}/proposals/draft(id=${job.id})}"
+                    formnovalidate>Generisi Gemini draft</button>
+        </div>
 
         <div class="form-grid">
             <label>

@@ -6,6 +6,7 @@ import com.it355pz.freelance.model.Proposal;
 import com.it355pz.freelance.model.User;
 import com.it355pz.freelance.service.FileStorageService;
 import com.it355pz.freelance.service.FreelanceJobService;
+import com.it355pz.freelance.service.ProposalDraftService;
 import com.it355pz.freelance.service.ProposalService;
 import com.it355pz.freelance.service.ResourceNotFoundException;
 import com.it355pz.freelance.service.UserService;
@@ -33,13 +34,16 @@ public class ProposalController {
     private final FreelanceJobService freelanceJobService;
     private final UserService userService;
     private final FileStorageService fileStorageService;
+    private final ProposalDraftService proposalDraftService;
 
     public ProposalController(ProposalService proposalService, FreelanceJobService freelanceJobService,
-                              UserService userService, FileStorageService fileStorageService) {
+                              UserService userService, FileStorageService fileStorageService,
+                              ProposalDraftService proposalDraftService) {
         this.proposalService = proposalService;
         this.freelanceJobService = freelanceJobService;
         this.userService = userService;
         this.fileStorageService = fileStorageService;
+        this.proposalDraftService = proposalDraftService;
     }
 
     @GetMapping("/jobs/{jobId}/proposals")
@@ -59,6 +63,21 @@ public class ProposalController {
         return "proposals/form";
     }
 
+    @PostMapping("/jobs/{jobId}/proposals/draft")
+    public String generateDraft(@PathVariable Long jobId, @ModelAttribute ProposalForm proposalForm, Model model) {
+        try {
+            String draft = proposalDraftService.generateDraft(jobId, proposalForm.getFreelancerId());
+            proposalForm.setProposalText(draft);
+            populateProposalFormModel(jobId, proposalForm, model);
+            model.addAttribute("successMessage", "Gemini draft je generisan.");
+        } catch (ValidationException | ResourceNotFoundException ex) {
+            populateProposalFormModel(jobId, proposalForm, model);
+            model.addAttribute("errorMessage", ex.getMessage());
+        }
+
+        return "proposals/form";
+    }
+
     @PostMapping("/jobs/{jobId}/proposals")
     public String createProposal(@PathVariable Long jobId, @ModelAttribute ProposalForm proposalForm,
                                  @RequestParam("cvFile") MultipartFile cvFile, Model model) {
@@ -67,10 +86,7 @@ public class ProposalController {
                     proposalForm.getOfferedPrice(), proposalForm.getEstimatedDays(), cvFile);
             return "redirect:/jobs/" + jobId + "/proposals";
         } catch (ValidationException | ResourceNotFoundException ex) {
-            model.addAttribute("pageTitle", "Nova prijava");
-            model.addAttribute("job", freelanceJobService.getById(jobId));
-            model.addAttribute("proposalForm", proposalForm);
-            model.addAttribute("freelancers", findFreelancers());
+            populateProposalFormModel(jobId, proposalForm, model);
             model.addAttribute("errorMessage", ex.getMessage());
             return "proposals/form";
         }
@@ -95,5 +111,12 @@ public class ProposalController {
         return userService.findAll().stream()
                 .filter(User::isFreelancer)
                 .toList();
+    }
+
+    private void populateProposalFormModel(Long jobId, ProposalForm proposalForm, Model model) {
+        model.addAttribute("pageTitle", "Nova prijava");
+        model.addAttribute("job", freelanceJobService.getById(jobId));
+        model.addAttribute("proposalForm", proposalForm);
+        model.addAttribute("freelancers", findFreelancers());
     }
 }
