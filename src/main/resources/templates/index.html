@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="sr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle}">Freelance poslovi</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<header class="topbar">
+    <a class="brand" th:href="@{/}">FreelanceHub</a>
+    <nav class="nav">
+        <a th:href="@{/}">Poslovi</a>
+        <a th:href="@{/}">Prijave</a>
+        <a th:href="@{/}">Profil</a>
+    </nav>
+</header>
+
+<main class="page-shell">
+    <section class="intro">
+        <p class="eyebrow">IT355 PZ1</p>
+        <h1>Spring MVC aplikacija za freelance poslove i proposal prijave</h1>
+        <p>
+            Početna verzija projekta je spremna. U sledećim fazama biće dodati modeli,
+            application scope skladište, CRUD tokovi, prijave i CV attachment.
+        </p>
+    </section>
+
+    <section class="status-grid" aria-label="Status implementacije">
+        <article>
+            <span>01</span>
+            <h2>MVC skeleton</h2>
+            <p>Kontroler, Thymeleaf view i statički CSS su povezani.</p>
+        </article>
+        <article>
+            <span>02</span>
+            <h2>Application scope</h2>
+            <p>Memorijsko skladište podataka dolazi u sledećoj fazi.</p>
+        </article>
+        <article>
+            <span>03</span>
+            <h2>CV upload</h2>
+            <p>Rad sa fajlovima biće deo proposal prijave.</p>
+        </article>
+    </section>
+</main>
+</body>
+</html>
