@@ -24,6 +24,8 @@
         </div>
         <div class="actions">
             <a class="button secondary" th:href="@{/jobs}">Nazad</a>
+            <a class="button secondary" th:href="@{/jobs/{id}/proposals(id=${job.id})}">Prijave</a>
+            <a class="button primary" th:href="@{/jobs/{id}/proposals/new(id=${job.id})}">Posalji prijavu</a>
             <a class="button primary" th:href="@{/jobs/{id}/edit(id=${job.id})}">Izmeni</a>
         </div>
     </div>

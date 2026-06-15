@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="sr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle}">Prijave</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<header class="topbar">
+    <a class="brand" th:href="@{/}">FreelanceHub</a>
+    <nav class="nav">
+        <a th:href="@{/jobs}">Poslovi</a>
+        <a th:href="@{/jobs/new}">Novi posao</a>
+        <a th:href="@{/}">Profil</a>
+    </nav>
+</header>
+
+<main class="page-shell">
+    <div class="page-header">
+        <div>
+            <p class="eyebrow" th:text="${job.title}">Posao</p>
+            <h1>Proposal prijave</h1>
+        </div>
+        <div class="actions">
+            <a class="button secondary" th:href="@{/jobs/{id}(id=${job.id})}">Detalji posla</a>
+            <a class="button primary" th:href="@{/jobs/{id}/proposals/new(id=${job.id})}">Nova prijava</a>
+        </div>
+    </div>
+
+    <section class="proposal-list" aria-label="Lista proposal prijava">
+        <article th:if="${proposals.isEmpty()}" class="proposal-card">
+            <h2>Nema prijava</h2>
+            <p>Za ovaj posao jos nema poslatih proposal prijava.</p>
+        </article>
+
+        <article th:each="proposal : ${proposals}" class="proposal-card">
+            <div class="proposal-card-header">
+                <div>
+                    <h2 th:text="${proposal.freelancer.fullName}">Freelancer</h2>
+                    <p th:text="${proposal.freelancer.email}">email@example.com</p>
+                </div>
+                <strong th:text="${#numbers.formatDecimal(proposal.offeredPrice, 1, 2)} + ' EUR'">0.00 EUR</strong>
+            </div>
+
+            <p th:text="${proposal.proposalText}">Proposal tekst</p>
+
+            <dl class="inline-meta">
+                <div>
+                    <dt>Rok</dt>
+                    <dd th:text="${proposal.estimatedDays} + ' dana'">0 dana</dd>
+                </div>
+                <div>
+                    <dt>CV</dt>
+                    <dd>
+                        <a class="table-link"
+                           th:href="@{/proposals/{id}/cv(id=${proposal.id})}"
+                           th:text="${proposal.cvAttachment.originalFileName}">cv.pdf</a>
+                    </dd>
+                </div>
+            </dl>
+        </article>
+    </section>
+</main>
+</body>
+</html>

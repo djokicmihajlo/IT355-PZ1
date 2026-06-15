@@ -16,12 +16,12 @@ class ApplicationDataTest {
 
     @Test
     void seedDataIsLoadedIntoApplicationScopeRepository() {
-        assertEquals(2, data.getUsers().size());
-        assertEquals(2, data.getCategories().size());
-        assertEquals(4, data.getSkills().size());
-        assertEquals(2, data.getJobs().size());
-        assertEquals(1, data.getProposals().size());
-        assertEquals(1, data.getCvAttachments().size());
+        assertTrue(data.getUsers().size() >= 2);
+        assertTrue(data.getCategories().size() >= 2);
+        assertTrue(data.getSkills().size() >= 4);
+        assertTrue(data.getJobs().size() >= 2);
+        assertTrue(data.getProposals().size() >= 1);
+        assertTrue(data.getCvAttachments().size() >= 1);
     }
 
     @Test

@@ -279,6 +279,40 @@ tr:last-child td {
     line-height: 1.7;
 }
 
+.proposal-list {
+    display: grid;
+    gap: 16px;
+}
+
+.proposal-card {
+    padding: 22px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+}
+
+.proposal-card-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 14px;
+}
+
+.proposal-card h2 {
+    margin: 0;
+    font-size: 20px;
+}
+
+.proposal-card p {
+    margin: 4px 0 0;
+    color: var(--muted);
+    line-height: 1.6;
+}
+
+.proposal-card > p {
+    margin-top: 14px;
+}
+
 dl {
     margin: 0;
     display: grid;
@@ -295,6 +329,15 @@ dt {
 dd {
     margin: 5px 0 0;
     font-weight: 700;
+}
+
+.inline-meta {
+    display: flex;
+    gap: 28px;
+    flex-wrap: wrap;
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
 }
 
 .skill-row {
@@ -426,6 +469,10 @@ legend {
     }
 
     .page-header {
+        flex-direction: column;
+    }
+
+    .proposal-card-header {
         flex-direction: column;
     }
 

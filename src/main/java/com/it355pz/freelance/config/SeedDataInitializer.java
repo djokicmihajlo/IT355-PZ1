@@ -11,7 +11,10 @@ import com.it355pz.freelance.repository.ApplicationData;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -58,13 +61,27 @@ public class SeedDataInitializer {
                 LocalDateTime.now().minusDays(1));
         data.getJobs().addAll(List.of(landingPage, dashboardDesign));
 
+        Path sampleCvPath = createSampleCvFile();
         CvAttachment sampleCv = new CvAttachment(data.nextCvAttachmentId(), "ana-markovic-cv.pdf",
-                "application/pdf", 245_760, "uploads/cv/sample-ana-markovic-cv.pdf");
+                "application/pdf", sampleCvPath.toFile().length(), sampleCvPath.toString());
         data.getCvAttachments().add(sampleCv);
 
         Proposal proposal = new Proposal(data.nextProposalId(), landingPage, freelancer,
                 "Mogu da implementiram MVC tok sa jasnim service slojem i Thymeleaf prikazima.",
                 new BigDecimal("420.00"), 5, sampleCv, LocalDateTime.now().minusHours(8));
         data.getProposals().add(proposal);
+    }
+
+    private Path createSampleCvFile() {
+        Path path = Path.of("uploads/cv/sample-ana-markovic-cv.pdf").toAbsolutePath().normalize();
+        try {
+            Files.createDirectories(path.getParent());
+            if (!Files.exists(path)) {
+                Files.writeString(path, "%PDF-1.4 sample CV placeholder for seed data");
+            }
+        } catch (IOException ex) {
+            throw new IllegalStateException("Seed CV fajl nije mogao da bude kreiran.", ex);
+        }
+        return path;
     }
 }
