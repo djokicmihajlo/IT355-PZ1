@@ -3,30 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${pageTitle}">Freelance poslovi</title>
+    <title th:text="${pageTitle}">Freelancer Platforma</title>
     <link rel="stylesheet" th:href="@{/css/main.css}">
 </head>
 <body>
 <header class="topbar">
-    <a class="brand" th:href="@{/}">FreelanceHub</a>
+    <a class="brand" th:href="@{/}" th:text="${appName}">Freelancer Platforma</a>
     <nav class="nav">
         <a th:href="@{/jobs}">Poslovi</a>
-        <a th:href="@{/jobs/new}">Novi posao</a>
-        <a th:href="@{/}">Profil</a>
+        <a th:if="${currentUser != null and currentUser.client}" th:href="@{/jobs/new}">Objavi posao</a>
+        <a th:if="${currentUser != null}" th:href="@{/dashboard}">Panel</a>
+        <a th:if="${currentUser == null}" th:href="@{/login}">Prijava</a>
+        <a th:if="${currentUser == null}" th:href="@{/register}">Registracija</a>
+        <form th:if="${currentUser != null}" method="post" th:action="@{/logout}">
+            <button class="nav-button" type="submit">Odjava</button>
+        </form>
     </nav>
 </header>
 
 <main class="page-shell">
     <section class="intro">
-        <p class="eyebrow">IT355 PZ1</p>
-        <h1>Spring MVC aplikacija za freelance poslove i proposal prijave</h1>
-        <p>
-            Pocetna verzija projekta ima MVC tok, application scope memoriju,
-            servisni sloj i CRUD ekrane za freelance poslove.
-        </p>
+        <p class="eyebrow">Freelancer Platforma</p>
+        <h1>Pronadji posao ili saradnika za sledeci projekat</h1>
+        <p>Clienti objavljuju poslove i biraju saradnike, a freelanceri salju prijave sa ponudom, rokom i CV fajlom.</p>
         <div class="actions">
             <a class="button primary" th:href="@{/jobs}">Pregled poslova</a>
-            <a class="button secondary" th:href="@{/jobs/new}">Objavi posao</a>
+            <a class="button secondary" th:if="${currentUser == null}" th:href="@{/register}">Napravi nalog</a>
+            <a class="button secondary" th:if="${currentUser != null and currentUser.client}" th:href="@{/jobs/new}">Objavi posao</a>
         </div>
     </section>
 
@@ -34,17 +37,17 @@
         <article>
             <span>01</span>
             <h2 th:text="${jobCount} + ' poslova'">0 poslova</h2>
-            <p>Seed podaci se cuvaju u application scope memorijskom repozitorijumu.</p>
+            <p>Objavljeni poslovi za freelancere.</p>
         </article>
         <article>
             <span>02</span>
             <h2 th:text="${proposalCount} + ' prijava'">0 prijava</h2>
-            <p>Proposal prijave su povezane sa poslom, freelancerom i CV metapodacima.</p>
+            <p>Prijave sa ponudom, rokom i prilozenim CV fajlom.</p>
         </article>
         <article>
             <span>03</span>
             <h2 th:text="${userCount} + ' korisnika'">0 korisnika</h2>
-            <p>U sistemu postoje pocetni client i freelancer korisnik.</p>
+            <p>Client i freelancer nalozi spremni za koriscenje.</p>
         </article>
     </section>
 </main>

@@ -30,9 +30,9 @@ class ProposalServiceTest {
         long attachmentCount = data.getCvAttachments().size();
 
         Proposal proposal = proposalService.create(
-                firstJobId(),
+                secondJobId(),
                 firstFreelancerId(),
-                "Imam iskustvo sa Spring MVC i Thymeleaf aplikacijama.",
+                "Imam iskustvo u organizaciji sadrzaja i mogu da isporucim resenje u dogovorenom roku.",
                 new BigDecimal("390.00"),
                 6,
                 pdfCv()
@@ -54,7 +54,7 @@ class ProposalServiceTest {
         );
 
         assertThrows(ValidationException.class, () -> proposalService.create(
-                firstJobId(),
+                thirdJobId(),
                 firstFreelancerId(),
                 "Validan tekst prijave.",
                 new BigDecimal("100.00"),
@@ -65,6 +65,14 @@ class ProposalServiceTest {
 
     private Long firstJobId() {
         return data.getJobs().get(0).getId();
+    }
+
+    private Long secondJobId() {
+        return data.getJobs().get(1).getId();
+    }
+
+    private Long thirdJobId() {
+        return data.getJobs().get(2).getId();
     }
 
     private Long firstFreelancerId() {

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="sr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle}">Registracija</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<header class="topbar">
+    <a class="brand" th:href="@{/}" th:text="${appName}">Freelancer Platforma</a>
+    <nav class="nav">
+        <a th:href="@{/jobs}">Poslovi</a>
+        <a th:href="@{/login}">Prijava</a>
+    </nav>
+</header>
+
+<main class="page-shell narrow">
+    <div class="page-header">
+        <div>
+            <p class="eyebrow">Novi nalog</p>
+            <h1>Registracija</h1>
+        </div>
+    </div>
+
+    <div th:if="${errorMessage}" class="alert" th:text="${errorMessage}">Greska</div>
+
+    <form class="form-panel" method="post" th:object="${registerForm}" th:action="@{/register}">
+        <div class="form-grid">
+            <label>
+                Korisnicko ime
+                <input type="text" th:field="*{username}">
+            </label>
+
+            <label>
+                Lozinka
+                <input type="password" th:field="*{password}">
+            </label>
+        </div>
+
+        <div class="form-grid">
+            <label>
+                Ime i prezime
+                <input type="text" th:field="*{fullName}">
+            </label>
+
+            <label>
+                Email
+                <input type="email" th:field="*{email}">
+            </label>
+        </div>
+
+        <label>
+            Tip naloga
+            <select th:field="*{role}">
+                <option value="">Izaberi tip naloga</option>
+                <option th:each="role : ${roles}"
+                        th:value="${role}"
+                        th:text="${role.name() == 'CLIENT' ? 'Client' : 'Freelancer'}">Tip</option>
+            </select>
+        </label>
+
+        <label>
+            Kratak opis
+            <textarea rows="5" th:field="*{profileSummary}" placeholder="Ukratko opisi sta nudis ili kakve saradnike trazis"></textarea>
+        </label>
+
+        <div class="form-actions">
+            <button class="button primary" type="submit">Registruj se</button>
+            <a class="button secondary" th:href="@{/login}">Vec imam nalog</a>
+        </div>
+    </form>
+</main>
+</body>
+</html>

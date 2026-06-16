@@ -8,11 +8,16 @@
 </head>
 <body>
 <header class="topbar">
-    <a class="brand" th:href="@{/}">FreelanceHub</a>
+    <a class="brand" th:href="@{/}" th:text="${appName}">Freelancer Platforma</a>
     <nav class="nav">
         <a th:href="@{/jobs}">Poslovi</a>
-        <a th:href="@{/jobs/new}">Novi posao</a>
-        <a th:href="@{/}">Profil</a>
+        <a th:if="${currentUser != null and currentUser.client}" th:href="@{/jobs/new}">Objavi posao</a>
+        <a th:if="${currentUser != null}" th:href="@{/dashboard}">Panel</a>
+        <a th:if="${currentUser == null}" th:href="@{/login}">Prijava</a>
+        <a th:if="${currentUser == null}" th:href="@{/register}">Registracija</a>
+        <form th:if="${currentUser != null}" method="post" th:action="@{/logout}">
+            <button class="nav-button" type="submit">Odjava</button>
+        </form>
     </nav>
 </header>
 
@@ -24,9 +29,15 @@
         </div>
         <div class="actions">
             <a class="button secondary" th:href="@{/jobs}">Nazad</a>
-            <a class="button secondary" th:href="@{/jobs/{id}/proposals(id=${job.id})}">Prijave</a>
-            <a class="button primary" th:href="@{/jobs/{id}/proposals/new(id=${job.id})}">Posalji prijavu</a>
-            <a class="button primary" th:href="@{/jobs/{id}/edit(id=${job.id})}">Izmeni</a>
+            <a class="button secondary"
+               th:if="${currentUser != null and currentUser.client and job.client.id == currentUser.id}"
+               th:href="@{/jobs/{id}/proposals(id=${job.id})}">Prijave</a>
+            <a class="button primary"
+               th:if="${currentUser != null and currentUser.freelancer and job.open}"
+               th:href="@{/jobs/{id}/proposals/new(id=${job.id})}">Posalji prijavu</a>
+            <a class="button primary"
+               th:if="${currentUser != null and currentUser.client and job.client.id == currentUser.id}"
+               th:href="@{/jobs/{id}/edit(id=${job.id})}">Izmeni</a>
         </div>
     </div>
 
@@ -49,6 +60,14 @@
                 <div>
                     <dt>Email</dt>
                     <dd th:text="${job.client.email}">email@example.com</dd>
+                </div>
+                <div>
+                    <dt>Status</dt>
+                    <dd th:text="${job.open ? 'Otvoren' : 'Dodeljen'}">Otvoren</dd>
+                </div>
+                <div th:if="${job.granted}">
+                    <dt>Dodeljeno freelanceru</dt>
+                    <dd th:text="${job.grantedFreelancer.fullName}">Freelancer</dd>
                 </div>
             </dl>
         </aside>

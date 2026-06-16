@@ -71,7 +71,7 @@ public class GeminiProposalDraftService implements ProposalDraftService {
         String apiKey = resolveValue(API_KEY_NAME, configuredApiKey)
                 .filter(this::isRealApiKey)
                 .orElseThrow(() -> new ValidationException(
-                        "Gemini API kljuc nije podesen. Dodaj GEMINI_API_KEY u .env ili environment."));
+                        "Generisanje predloga nije podeseno."));
         String model = resolveValue(MODEL_NAME, configuredModel)
                 .filter(value -> !value.isBlank())
                 .orElse("gemini-3.5-flash");
@@ -100,7 +100,7 @@ public class GeminiProposalDraftService implements ProposalDraftService {
                     .retrieve()
                     .body(String.class);
         } catch (RestClientException ex) {
-            throw new ValidationException("Gemini draft trenutno nije dostupan. Pokusaj ponovo kasnije.");
+            throw new ValidationException("Generisanje predloga trenutno nije dostupno. Pokusaj ponovo kasnije.");
         }
     }
 
@@ -116,12 +116,12 @@ public class GeminiProposalDraftService implements ProposalDraftService {
                     .asText("");
 
             if (text.isBlank()) {
-                throw new ValidationException("Gemini nije vratio draft tekst.");
+                throw new ValidationException("Predlog nije vracen u ocekivanom formatu.");
             }
 
             return text.trim();
         } catch (JsonProcessingException ex) {
-            throw new ValidationException("Gemini odgovor nije u ocekivanom formatu.");
+            throw new ValidationException("Predlog nije vracen u ocekivanom formatu.");
         }
     }
 
@@ -194,7 +194,11 @@ public class GeminiProposalDraftService implements ProposalDraftService {
     }
 
     private boolean isRealApiKey(String apiKey) {
-        return !apiKey.isBlank() && !apiKey.contains("YOUR_GEMINI_API_KEY");
+        String normalizedApiKey = apiKey.toUpperCase();
+        return !apiKey.isBlank()
+                && !normalizedApiKey.contains("YOUR")
+                && !normalizedApiKey.contains("PLACEHOLDER")
+                && !normalizedApiKey.contains("TEMPLATE");
     }
 
     private String trimTrailingSlash(String value) {

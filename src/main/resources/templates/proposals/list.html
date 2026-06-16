@@ -8,11 +8,14 @@
 </head>
 <body>
 <header class="topbar">
-    <a class="brand" th:href="@{/}">FreelanceHub</a>
+    <a class="brand" th:href="@{/}" th:text="${appName}">Freelancer Platforma</a>
     <nav class="nav">
         <a th:href="@{/jobs}">Poslovi</a>
-        <a th:href="@{/jobs/new}">Novi posao</a>
-        <a th:href="@{/}">Profil</a>
+        <a th:if="${currentUser != null and currentUser.client}" th:href="@{/jobs/new}">Objavi posao</a>
+        <a th:href="@{/dashboard}">Panel</a>
+        <form method="post" th:action="@{/logout}">
+            <button class="nav-button" type="submit">Odjava</button>
+        </form>
     </nav>
 </header>
 
@@ -20,11 +23,10 @@
     <div class="page-header">
         <div>
             <p class="eyebrow" th:text="${job.title}">Posao</p>
-            <h1>Proposal prijave</h1>
+            <h1>Prijave</h1>
         </div>
         <div class="actions">
             <a class="button secondary" th:href="@{/jobs/{id}(id=${job.id})}">Detalji posla</a>
-            <a class="button primary" th:href="@{/jobs/{id}/proposals/new(id=${job.id})}">Nova prijava</a>
         </div>
     </div>
 
@@ -56,6 +58,16 @@
                         <a class="table-link"
                            th:href="@{/proposals/{id}/cv(id=${proposal.id})}"
                            th:text="${proposal.cvAttachment.originalFileName}">cv.pdf</a>
+                    </dd>
+                </div>
+                <div>
+                    <dt>Akcija</dt>
+                    <dd>
+                        <form th:if="${job.open}" method="post"
+                              th:action="@{/jobs/{jobId}/proposals/{proposalId}/grant(jobId=${job.id},proposalId=${proposal.id})}">
+                            <button class="button compact primary" type="submit">Dodeli posao</button>
+                        </form>
+                        <span th:if="${job.granted and job.grantedFreelancer.id == proposal.freelancer.id}">Izabran freelancer</span>
                     </dd>
                 </div>
             </dl>

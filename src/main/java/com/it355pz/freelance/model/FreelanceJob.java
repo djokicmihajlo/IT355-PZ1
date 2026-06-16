@@ -15,6 +15,9 @@ public class FreelanceJob {
     private List<Skill> requiredSkills = new ArrayList<>();
     private User client;
     private LocalDateTime createdAt;
+    private JobStatus status = JobStatus.OPEN;
+    private User grantedFreelancer;
+    private LocalDateTime grantedAt;
 
     public FreelanceJob() {
     }
@@ -29,6 +32,7 @@ public class FreelanceJob {
         this.requiredSkills = requiredSkills;
         this.client = client;
         this.createdAt = createdAt;
+        this.status = JobStatus.OPEN;
     }
 
     public Long getId() {
@@ -93,5 +97,37 @@ public class FreelanceJob {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public JobStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(JobStatus status) {
+        this.status = status;
+    }
+
+    public User getGrantedFreelancer() {
+        return grantedFreelancer;
+    }
+
+    public void setGrantedFreelancer(User grantedFreelancer) {
+        this.grantedFreelancer = grantedFreelancer;
+    }
+
+    public LocalDateTime getGrantedAt() {
+        return grantedAt;
+    }
+
+    public void setGrantedAt(LocalDateTime grantedAt) {
+        this.grantedAt = grantedAt;
+    }
+
+    public boolean isOpen() {
+        return JobStatus.OPEN.equals(status);
+    }
+
+    public boolean isGranted() {
+        return JobStatus.GRANTED.equals(status);
     }
 }

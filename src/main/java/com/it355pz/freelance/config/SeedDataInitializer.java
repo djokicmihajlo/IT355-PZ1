@@ -33,33 +33,44 @@ public class SeedDataInitializer {
             return;
         }
 
-        Category webDevelopment = new Category(data.nextCategoryId(), "Web razvoj",
-                "Izrada i odrzavanje web aplikacija.");
+        Category webDevelopment = new Category(data.nextCategoryId(), "Web projekti",
+                "Izrada i odrzavanje poslovnih web resenja.");
         Category design = new Category(data.nextCategoryId(), "Dizajn",
-                "UI/UX dizajn i vizuelni identitet.");
-        data.getCategories().addAll(List.of(webDevelopment, design));
+                "Vizuelni identitet i uredjenje korisnickog iskustva.");
+        Category content = new Category(data.nextCategoryId(), "Sadrzaj",
+                "Priprema tekstova, prezentacija i materijala za objavu.");
+        data.getCategories().addAll(List.of(webDevelopment, design, content));
 
-        Skill springBoot = new Skill(data.nextSkillId(), "Spring Boot");
-        Skill thymeleaf = new Skill(data.nextSkillId(), "Thymeleaf");
-        Skill css = new Skill(data.nextSkillId(), "CSS");
-        Skill uiDesign = new Skill(data.nextSkillId(), "UI dizajn");
-        data.getSkills().addAll(List.of(springBoot, thymeleaf, css, uiDesign));
+        Skill webPages = new Skill(data.nextSkillId(), "Web stranice");
+        Skill copywriting = new Skill(data.nextSkillId(), "Pisanje tekstova");
+        Skill visualDesign = new Skill(data.nextSkillId(), "Vizuelni dizajn");
+        Skill organization = new Skill(data.nextSkillId(), "Organizacija sadrzaja");
+        Skill userExperience = new Skill(data.nextSkillId(), "Korisnicko iskustvo");
+        data.getSkills().addAll(List.of(webPages, copywriting, visualDesign, organization, userExperience));
 
-        User client = new User(data.nextUserId(), "client_milan", "Milan Petrovic",
-                "milan@example.com", UserRole.CLIENT, "Vlasnik malog biznisa koji objavljuje freelance poslove.");
-        User freelancer = new User(data.nextUserId(), "freelancer_ana", "Ana Markovic",
-                "ana@example.com", UserRole.FREELANCER, "Java freelancer sa iskustvom u Spring MVC aplikacijama.");
-        data.getUsers().addAll(List.of(client, freelancer));
+        User client = new User(data.nextUserId(), "client_milan", "client123", "Milan Petrovic",
+                "milan@example.com", UserRole.CLIENT, "Vlasnik malog biznisa koji objavljuje poslove.");
+        User secondClient = new User(data.nextUserId(), "client_jelena", "client123", "Jelena Simic",
+                "jelena@example.com", UserRole.CLIENT, "Menadzerka koja trazi saradnike za digitalne projekte.");
+        User freelancer = new User(data.nextUserId(), "freelancer_ana", "freelancer123", "Ana Markovic",
+                "ana@example.com", UserRole.FREELANCER, "Freelancer za organizaciju sadrzaja i poslovne stranice.");
+        User secondFreelancer = new User(data.nextUserId(), "freelancer_marko", "freelancer123", "Marko Jovanovic",
+                "marko@example.com", UserRole.FREELANCER, "Freelancer za dizajn, tekstove i korisnicko iskustvo.");
+        data.getUsers().addAll(List.of(client, secondClient, freelancer, secondFreelancer));
 
-        FreelanceJob landingPage = new FreelanceJob(data.nextJobId(), "Izrada Spring MVC landing stranice",
-                "Potrebna je jednostavna Spring MVC aplikacija sa Thymeleaf prikazima i urednim CSS stilom.",
-                new BigDecimal("450.00"), webDevelopment, List.of(springBoot, thymeleaf, css), client,
+        FreelanceJob landingPage = new FreelanceJob(data.nextJobId(), "Izrada prezentacione stranice",
+                "Potrebna je moderna prezentaciona stranica za mali studio, sa jasnim opisom usluga i kontakt sekcijom.",
+                new BigDecimal("450.00"), webDevelopment, List.of(webPages, organization, userExperience), client,
                 LocalDateTime.now().minusDays(2));
-        FreelanceJob dashboardDesign = new FreelanceJob(data.nextJobId(), "Redizajn dashboard interfejsa",
-                "Potrebno je urediti pregledan dashboard za pracenje prijava i statusa poslova.",
-                new BigDecimal("300.00"), design, List.of(css, uiDesign), client,
+        FreelanceJob dashboardDesign = new FreelanceJob(data.nextJobId(), "Redizajn korisnickog panela",
+                "Potrebno je urediti pregledan panel za pracenje narudzbina, poruka i statusa saradnje.",
+                new BigDecimal("300.00"), design, List.of(visualDesign, userExperience), client,
                 LocalDateTime.now().minusDays(1));
-        data.getJobs().addAll(List.of(landingPage, dashboardDesign));
+        FreelanceJob productTexts = new FreelanceJob(data.nextJobId(), "Priprema tekstova za usluge",
+                "Potrebni su kratki i jasni tekstovi za opis usluga, najcesca pitanja i kontakt stranicu.",
+                new BigDecimal("180.00"), content, List.of(copywriting, organization), secondClient,
+                LocalDateTime.now().minusHours(18));
+        data.getJobs().addAll(List.of(landingPage, dashboardDesign, productTexts));
 
         Path sampleCvPath = createSampleCvFile();
         CvAttachment sampleCv = new CvAttachment(data.nextCvAttachmentId(), "ana-markovic-cv.pdf",
@@ -67,7 +78,7 @@ public class SeedDataInitializer {
         data.getCvAttachments().add(sampleCv);
 
         Proposal proposal = new Proposal(data.nextProposalId(), landingPage, freelancer,
-                "Mogu da implementiram MVC tok sa jasnim service slojem i Thymeleaf prikazima.",
+                "Mogu da pripremim jasnu strukturu stranice, uredim sadrzaj i isporucim pregledno resenje.",
                 new BigDecimal("420.00"), 5, sampleCv, LocalDateTime.now().minusHours(8));
         data.getProposals().add(proposal);
     }

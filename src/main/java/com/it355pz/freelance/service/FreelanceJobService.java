@@ -10,6 +10,8 @@ public interface FreelanceJobService {
 
     List<FreelanceJob> findAll();
 
+    List<FreelanceJob> findByClientId(Long clientId);
+
     Optional<FreelanceJob> findById(Long id);
 
     FreelanceJob getById(Long id);
@@ -23,6 +25,8 @@ public interface FreelanceJobService {
                         List<Long> skillIds);
 
     boolean deleteById(Long id);
+
+    FreelanceJob grantJob(Long jobId, Long proposalId, Long clientId);
 
     long count();
 }

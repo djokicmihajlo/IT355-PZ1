@@ -45,7 +45,7 @@ class GeminiProposalDraftServiceTest {
                 () -> proposalDraftService.generateDraft(1L, 2L)
         );
 
-        assertTrue(exception.getMessage().contains("Gemini API kljuc nije podesen"));
+        assertTrue(exception.getMessage().contains("Generisanje predloga nije podeseno"));
     }
 
     private FreelanceJob testJob() {

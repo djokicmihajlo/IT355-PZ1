@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="sr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle}">Kontrolna tabla</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<header class="topbar">
+    <a class="brand" th:href="@{/}" th:text="${appName}">Freelancer Platforma</a>
+    <nav class="nav">
+        <a th:href="@{/jobs}">Poslovi</a>
+        <a th:if="${currentUser.client}" th:href="@{/jobs/new}">Objavi posao</a>
+        <form method="post" th:action="@{/logout}">
+            <button class="nav-button" type="submit">Odjava</button>
+        </form>
+    </nav>
+</header>
+
+<main class="page-shell">
+    <section class="intro">
+        <p class="eyebrow" th:text="${currentUser.client ? 'Client nalog' : 'Freelancer nalog'}">Nalog</p>
+        <h1 th:text="'Zdravo, ' + ${currentUser.fullName}">Zdravo</h1>
+        <p th:if="${currentUser.client}">Ovde mozes da objavis posao, pregledas svoje poslove i odaberes freelancera za saradnju.</p>
+        <p th:if="${currentUser.freelancer}">Ovde mozes da pregledas poslove, posaljes prijavu, generises predlog teksta i prilozis CV.</p>
+        <div class="actions">
+            <a class="button primary" th:href="@{/jobs}">Pregled poslova</a>
+            <a class="button secondary" th:if="${currentUser.client}" th:href="@{/jobs/new}">Objavi posao</a>
+        </div>
+    </section>
+
+    <section class="status-grid" aria-label="Pregled stanja">
+        <article>
+            <span>01</span>
+            <h2 th:text="${jobCount} + ' poslova'">0 poslova</h2>
+            <p>Aktivni oglasi i poslovi koji su vec dodeljeni freelancerima.</p>
+        </article>
+        <article>
+            <span>02</span>
+            <h2 th:text="${proposalCount} + ' prijava'">0 prijava</h2>
+            <p>Prijave sa ponudom, rokom izrade i CV fajlom.</p>
+        </article>
+        <article>
+            <span>03</span>
+            <h2 th:text="${userCount} + ' korisnika'">0 korisnika</h2>
+            <p>Client i freelancer nalozi dostupni u aplikaciji.</p>
+        </article>
+    </section>
+</main>
+</body>
+</html>

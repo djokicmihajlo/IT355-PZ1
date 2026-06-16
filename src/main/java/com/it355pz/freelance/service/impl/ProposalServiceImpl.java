@@ -70,9 +70,20 @@ public class ProposalServiceImpl implements ProposalService {
         validateProposalData(proposalText, offeredPrice, estimatedDays);
 
         FreelanceJob job = freelanceJobService.getById(jobId);
+        if (!job.isOpen()) {
+            throw new ValidationException("Posao je vec dodeljen.");
+        }
+
         User freelancer = userService.getById(freelancerId);
         if (!freelancer.isFreelancer()) {
             throw new ValidationException("Samo freelancer korisnik moze da posalje prijavu.");
+        }
+
+        boolean alreadyApplied = data.getProposals().stream()
+                .anyMatch(proposal -> proposal.getJob().getId().equals(jobId)
+                        && proposal.getFreelancer().getId().equals(freelancerId));
+        if (alreadyApplied) {
+            throw new ValidationException("Vec si poslao prijavu za ovaj posao.");
         }
 
         CvAttachment cvAttachment = fileStorageService.storeCv(cvFile);

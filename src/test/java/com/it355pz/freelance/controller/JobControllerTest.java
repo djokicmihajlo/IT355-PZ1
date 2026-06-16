@@ -2,6 +2,7 @@ package com.it355pz.freelance.controller;
 
 import com.it355pz.freelance.model.User;
 import com.it355pz.freelance.repository.ApplicationData;
+import com.it355pz.freelance.controller.SessionKeys;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -29,8 +30,8 @@ class JobControllerTest {
     void listJobsPageRendersSeedJobs() throws Exception {
         mockMvc.perform(get("/jobs"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Freelance poslovi")))
-                .andExpect(content().string(containsString("Izrada Spring MVC landing stranice")));
+                .andExpect(content().string(containsString("Dostupni poslovi")))
+                .andExpect(content().string(containsString("Izrada prezentacione stranice")));
     }
 
     @Test
@@ -40,35 +41,35 @@ class JobControllerTest {
         mockMvc.perform(get("/jobs/{id}", jobId))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Opis posla")))
-                .andExpect(content().string(containsString("Spring MVC")));
+                .andExpect(content().string(containsString("prezentaciona stranica")));
     }
 
     @Test
     void newJobPageRendersFormLookups() throws Exception {
-        mockMvc.perform(get("/jobs/new"))
+        mockMvc.perform(get("/jobs/new")
+                        .sessionAttr(SessionKeys.CURRENT_USER, firstClient()))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Novi posao")))
-                .andExpect(content().string(containsString("Spring Boot")));
+                .andExpect(content().string(containsString("Web stranice")));
     }
 
     @Test
     void postCreateJobRedirectsToDetailsPage() throws Exception {
         mockMvc.perform(post("/jobs")
+                        .sessionAttr(SessionKeys.CURRENT_USER, firstClient())
                         .param("title", "MockMvc posao")
                         .param("description", "Posao kreiran kroz MVC test.")
                         .param("budget", "250.00")
                         .param("categoryId", data.getCategories().get(0).getId().toString())
-                        .param("skillIds", data.getSkills().get(0).getId().toString())
-                        .param("clientId", firstClientId().toString()))
+                        .param("skillIds", data.getSkills().get(0).getId().toString()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrlPattern("/jobs/*"));
     }
 
-    private Long firstClientId() {
+    private User firstClient() {
         return data.getUsers().stream()
                 .filter(User::isClient)
                 .findFirst()
-                .map(User::getId)
                 .orElseThrow();
     }
 }

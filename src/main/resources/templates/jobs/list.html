@@ -8,24 +8,29 @@
 </head>
 <body>
 <header class="topbar">
-    <a class="brand" th:href="@{/}">FreelanceHub</a>
+    <a class="brand" th:href="@{/}" th:text="${appName}">Freelancer Platforma</a>
     <nav class="nav">
         <a th:href="@{/jobs}">Poslovi</a>
-        <a th:href="@{/jobs/new}">Novi posao</a>
-        <a th:href="@{/}">Profil</a>
+        <a th:if="${currentUser != null and currentUser.client}" th:href="@{/jobs/new}">Objavi posao</a>
+        <a th:if="${currentUser != null}" th:href="@{/dashboard}">Panel</a>
+        <a th:if="${currentUser == null}" th:href="@{/login}">Prijava</a>
+        <a th:if="${currentUser == null}" th:href="@{/register}">Registracija</a>
+        <form th:if="${currentUser != null}" method="post" th:action="@{/logout}">
+            <button class="nav-button" type="submit">Odjava</button>
+        </form>
     </nav>
 </header>
 
 <main class="page-shell">
     <div class="page-header">
         <div>
-            <p class="eyebrow">Pregled poslova</p>
-            <h1>Freelance poslovi</h1>
+            <p class="eyebrow" th:text="${currentUser != null and currentUser.client ? 'Moji poslovi' : 'Pregled poslova'}">Pregled poslova</p>
+            <h1 th:text="${currentUser != null and currentUser.client ? 'Moji poslovi' : 'Dostupni poslovi'}">Dostupni poslovi</h1>
         </div>
-        <a class="button primary" th:href="@{/jobs/new}">Objavi posao</a>
+        <a class="button primary" th:if="${currentUser != null and currentUser.client}" th:href="@{/jobs/new}">Objavi posao</a>
     </div>
 
-    <form class="filter-bar" method="get" th:action="@{/jobs}">
+    <form class="filter-bar" method="get" th:action="@{/jobs}" th:if="${currentUser == null or currentUser.freelancer}">
         <label>
             Pretraga
             <input type="search" name="keyword" th:value="${keyword}" placeholder="Naziv ili opis posla">
@@ -59,12 +64,13 @@
                 <th>Kategorija</th>
                 <th>Budzet</th>
                 <th>Client</th>
+                <th>Status</th>
                 <th>Akcije</th>
             </tr>
             </thead>
             <tbody>
             <tr th:if="${jobs.isEmpty()}">
-                <td colspan="5">Nema poslova koji odgovaraju filterima.</td>
+                <td colspan="6">Nema poslova koji odgovaraju filterima.</td>
             </tr>
             <tr th:each="job : ${jobs}">
                 <td>
@@ -74,10 +80,16 @@
                 <td th:text="${job.category.name}">Kategorija</td>
                 <td th:text="${#numbers.formatDecimal(job.budget, 1, 2)} + ' EUR'">0.00 EUR</td>
                 <td th:text="${job.client.fullName}">Client</td>
+                <td>
+                    <span class="status-pill" th:text="${job.open ? 'Otvoren' : 'Dodeljen'}">Otvoren</span>
+                </td>
                 <td class="table-actions">
                     <a class="button compact secondary" th:href="@{/jobs/{id}(id=${job.id})}">Detalji</a>
-                    <a class="button compact secondary" th:href="@{/jobs/{id}/edit(id=${job.id})}">Izmeni</a>
-                    <form method="post" th:action="@{/jobs/{id}/delete(id=${job.id})}">
+                    <a class="button compact secondary"
+                       th:if="${currentUser != null and currentUser.client and job.client.id == currentUser.id}"
+                       th:href="@{/jobs/{id}/edit(id=${job.id})}">Izmeni</a>
+                    <form th:if="${currentUser != null and currentUser.client and job.client.id == currentUser.id}"
+                          method="post" th:action="@{/jobs/{id}/delete(id=${job.id})}">
                         <button class="button compact danger" type="submit">Obrisi</button>
                     </form>
                 </td>

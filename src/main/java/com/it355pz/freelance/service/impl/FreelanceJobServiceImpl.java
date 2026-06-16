@@ -2,6 +2,8 @@ package com.it355pz.freelance.service.impl;
 
 import com.it355pz.freelance.model.Category;
 import com.it355pz.freelance.model.FreelanceJob;
+import com.it355pz.freelance.model.JobStatus;
+import com.it355pz.freelance.model.Proposal;
 import com.it355pz.freelance.model.Skill;
 import com.it355pz.freelance.model.User;
 import com.it355pz.freelance.repository.ApplicationData;
@@ -37,6 +39,13 @@ public class FreelanceJobServiceImpl implements FreelanceJobService {
     @Override
     public List<FreelanceJob> findAll() {
         return List.copyOf(data.getJobs());
+    }
+
+    @Override
+    public List<FreelanceJob> findByClientId(Long clientId) {
+        return data.getJobs().stream()
+                .filter(job -> job.getClient().getId().equals(clientId))
+                .toList();
     }
 
     @Override
@@ -114,6 +123,28 @@ public class FreelanceJobServiceImpl implements FreelanceJobService {
         synchronized (data.getJobs()) {
             return data.getJobs().removeIf(job -> job.getId().equals(id));
         }
+    }
+
+    @Override
+    public FreelanceJob grantJob(Long jobId, Long proposalId, Long clientId) {
+        FreelanceJob job = getById(jobId);
+        if (!job.getClient().getId().equals(clientId)) {
+            throw new ValidationException("Mozes da odlucujes samo o svojim poslovima.");
+        }
+
+        Proposal proposal = data.getProposals().stream()
+                .filter(item -> item.getId().equals(proposalId))
+                .filter(item -> item.getJob().getId().equals(jobId))
+                .findFirst()
+                .orElseThrow(() -> new ResourceNotFoundException("Prijava nije pronadjena."));
+
+        synchronized (data.getJobs()) {
+            job.setStatus(JobStatus.GRANTED);
+            job.setGrantedFreelancer(proposal.getFreelancer());
+            job.setGrantedAt(LocalDateTime.now());
+        }
+
+        return job;
     }
 
     @Override

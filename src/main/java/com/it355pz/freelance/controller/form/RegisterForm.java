@@ -1,48 +1,15 @@
-package com.it355pz.freelance.model;
+package com.it355pz.freelance.controller.form;
 
-public class User {
+import com.it355pz.freelance.model.UserRole;
 
-    private Long id;
+public class RegisterForm {
+
     private String username;
     private String password;
     private String fullName;
     private String email;
     private UserRole role;
     private String profileSummary;
-
-    public User() {
-    }
-
-    public User(Long id, String username, String fullName, String email, UserRole role, String profileSummary) {
-        this(id, username, "password", fullName, email, role, profileSummary);
-    }
-
-    public User(Long id, String username, String password, String fullName, String email, UserRole role,
-                String profileSummary) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.fullName = fullName;
-        this.email = email;
-        this.role = role;
-        this.profileSummary = profileSummary;
-    }
-
-    public boolean isFreelancer() {
-        return UserRole.FREELANCER.equals(role);
-    }
-
-    public boolean isClient() {
-        return UserRole.CLIENT.equals(role);
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getUsername() {
         return username;

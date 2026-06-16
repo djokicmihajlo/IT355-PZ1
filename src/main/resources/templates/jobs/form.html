@@ -8,18 +8,20 @@
 </head>
 <body>
 <header class="topbar">
-    <a class="brand" th:href="@{/}">FreelanceHub</a>
+    <a class="brand" th:href="@{/}" th:text="${appName}">Freelancer Platforma</a>
     <nav class="nav">
         <a th:href="@{/jobs}">Poslovi</a>
-        <a th:href="@{/jobs/new}">Novi posao</a>
-        <a th:href="@{/}">Profil</a>
+        <a th:href="@{/dashboard}">Panel</a>
+        <form method="post" th:action="@{/logout}">
+            <button class="nav-button" type="submit">Odjava</button>
+        </form>
     </nav>
 </header>
 
 <main class="page-shell narrow">
     <div class="page-header">
         <div>
-            <p class="eyebrow" th:text="${includeClients} ? 'Novi oglas' : 'Izmena oglasa'">Forma</p>
+            <p class="eyebrow" th:text="${jobId == null ? 'Novi oglas' : 'Izmena oglasa'}">Forma</p>
             <h1 th:text="${pageTitle}">Forma posla</h1>
         </div>
         <a class="button secondary" th:href="@{/jobs}">Nazad</a>
@@ -33,7 +35,7 @@
           th:action="${includeClients} ? @{/jobs} : @{/jobs/{id}/edit(id=${jobId})}">
         <label>
             Naziv posla
-            <input type="text" th:field="*{title}" placeholder="npr. Izrada Spring MVC modula">
+            <input type="text" th:field="*{title}" placeholder="npr. Izrada prezentacione stranice">
         </label>
 
         <label>
@@ -57,16 +59,6 @@
                 </select>
             </label>
         </div>
-
-        <label th:if="${includeClients}">
-            Client korisnik
-            <select th:field="*{clientId}">
-                <option value="">Izaberi client korisnika</option>
-                <option th:each="client : ${clients}"
-                        th:value="${client.id}"
-                        th:text="${client.fullName}">Client</option>
-            </select>
-        </label>
 
         <fieldset>
             <legend>Trazene vestine</legend>
