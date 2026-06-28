@@ -50,7 +50,8 @@ class JobControllerTest {
                         .sessionAttr(SessionKeys.CURRENT_USER, firstClient()))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Novi posao")))
-                .andExpect(content().string(containsString("Web stranice")));
+                .andExpect(content().string(containsString("Web stranice")))
+                .andExpect(content().string(containsString("action=\"/jobs\"")));
     }
 
     @Test

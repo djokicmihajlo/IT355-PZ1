@@ -1,5 +1,6 @@
 HELP.md
 *.md
+!PROJECT_DOCUMENTATION.md
 .env
 .DS_Store
 uploads/

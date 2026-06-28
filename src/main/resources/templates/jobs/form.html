@@ -32,7 +32,7 @@
     <form class="form-panel"
           method="post"
           th:object="${jobForm}"
-          th:action="${includeClients} ? @{/jobs} : @{/jobs/{id}/edit(id=${jobId})}">
+          th:action="${jobId == null} ? @{/jobs} : @{/jobs/{id}/edit(id=${jobId})}">
         <label>
             Naziv posla
             <input type="text" th:field="*{title}" placeholder="npr. Izrada prezentacione stranice">
